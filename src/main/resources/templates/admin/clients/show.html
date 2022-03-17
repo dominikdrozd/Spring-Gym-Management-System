@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siłownia</title>
+
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+    <script th:src="@{/js/tailwind.js}"></script>
+</head>
+<body class="bg-gray-800">
+
+    <div class="max-w-6xl mx-auto bg-gray-300">
+        <header class="w-full h-24 p-4 flex flex-row">
+            <div class="w-1/2 h-full flex flex-wrap content-center">
+                <div class="flex flex-col">
+                    <h2 class="text-2xl uppercase font-thin">Panel Admina</h2>
+                    <a href="/">Kliknij tutaj aby powrócić do strony głównej</a>
+                </div>
+            </div>
+            <div class="w-1/2 h-full flex flex-wrap content-center justify-end">
+                Witaj, <span class="text-blue-500" th:text="${#authentication.getPrincipal().getUsername()}"></span>!
+            </div>
+        </header>
+
+        <nav class="w-full h-12 bg-blue-500 flex flex-row flex-wrap content-center justify-center space-x-10">
+                <a class="text-blue-100 hover:text-blue-200 transition hover:font-bold" href="/admin/clients">Klienci</a>
+                <a class="text-blue-100 hover:text-blue-200 transition hover:font-bold" href="/admin/employees">Pracownicy</a>
+                <a class="text-blue-100 hover:text-blue-200 transition hover:font-bold" href="/admin/orders">Zamówienia</a>
+                <a class="text-blue-100 hover:text-blue-200 transition hover:font-bold" href="/admin/gyms">Siłownie</a>
+                <a class="text-blue-100 hover:text-blue-200 transition hover:font-bold" href="/admin/passes">Karnety</a>
+        </nav>
+        
+        <section class="p-4">
+
+            <h2 class="text-2xl mb-4">Szczegóły klienta nr <span th:text="${client.getId()}"></span></h2>
+
+            <div class="w-full flex flex-col">
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Imię:</div>
+                    <div class="w-3/4" th:text="${client.getName()}"></div>
+                </div>
+                
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Nazwisko:</div>
+                    <div class="w-3/4" th:text="${client.getSurname()}"></div>
+                </div>
+
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Numer Telefonu:</div>
+                    <div class="w-3/4" th:text="${client.getPhone()}"></div>
+                </div>
+
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Email:</div>
+                    <div class="w-3/4" th:text="${client.getUser().getEmail()}"></div>
+                </div>
+
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Adres:</div>
+                    <div class="w-3/4" th:text="${client.getAddress().getAddress()}"></div>
+                </div>
+
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Kod pocztowy:</div>
+                    <div class="w-3/4" th:text="${client.getAddress().getPostcode()}"></div>
+                </div>
+
+                <div class="flex flex-wrap flex-row justify-center content-center h-8">
+                    <div class="w-1/4">Miejscowość: </div>
+                    <div class="w-3/4" th:text="${client.getAddress().getCity()}"></div>
+                </div>
+            </div>
+
+            
+            <h2 class="text-2xl my-4">Kupione karnety</h2>
+
+            <div class="w-full flex flex-col">
+                <table>
+                    <tr class="bg-blue-500 text-blue-100 text-sm">
+                        <th>Lp</th>
+                        <th>Numer Zamówienia</th>
+                        <th>Nazwa Karnetu</th>
+                        <th>Sprzedający</th>
+                        <th>Cena</th>
+                        <th>Data Kupna</th>
+                        <th>Data Ważności</th>
+                        <th>Aktywne</th>
+                        <th>Akcje</th>
+                    </tr>
+                    <tr class="text-sm h-8 text-center" th:each="order, itr : ${orders}">
+                        <td th:text="${itr.index + 1}"></td>
+                        <td th:text="${order.getId()}"></td>
+                        <td>
+                            <a class="text-blue-500 hover:text-blue-800 transition hover:font-bold" th:href="${'/admin/passes/' + order.getPass().getId()}" th:text="${order.getPass().getName()}"></a>
+                        </td>
+                        <td>
+                            <a class="text-blue-500 hover:text-blue-800 transition hover:font-bold" th:if="${order.getEmployee()}" th:href="${'/admin/employees/' + order.getEmployee().getId()}" th:text="${order.getEmployee().getName() + ' ' + order.getEmployee().getSurname()}"></a>
+                        </td>
+                        <td th:text="${order.getPrice()}"></td>
+                        <td th:text="${order.getBoughtDate()}"></td>
+                        <td th:text="${order.getExpirationDate()}"></td>
+                        <th th:text="${order.isActive() ? 'tak' : 'nie'}"></th>
+                        <td class="flex-wrap flex justify-center content-center space-x-1">
+                            <a th:href="${'/admin/orders/' + order.getId()}" class="p-1 bg-blue-500 border-blue-700 border rounded-2xl text-blue-100 hover:bg-blue-700 hover:border-blue-500 transition shadow-sm">Szczegóły</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="10" class="bg-blue-500 text-blue-100">
+                            Łącznie zamówień: <span th:text="${orders.size()}"></span>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+
+        </section>
+
+        <footer class="h-16 flex flex-wrap w-full content-center bg-blue-500">
+            <div class="flex flex-row m-4 w-full">
+                <div class="flex flex-wrap  justify-center content-center w-1/2">Siłownia (c) 2022</div>
+                <div class="flex flex-wrap justify-center content-center w-1/2">Wykonał: Dominik Drozd</div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

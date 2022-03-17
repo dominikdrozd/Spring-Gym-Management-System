@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moja Siłownia!</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+    <script th:src="@{/js/tailwind.js}"></script>
+</head>
+<body>
+    <img th:src="@{/imgs/logo.png}" alt="" class="mx-auto min-w-1/6">
+
+    <div class="w-full h-12 bg-red-500">
+        <div class="max-w-6xl mx-auto h-12 flex flex-wrap flex-row justify-center content-center space-x-12 uppercase text-2xl font-thin text-white">
+            <a href="/">Strona Główna</a>
+            <a href="/about-us">O Nas</a>
+            <a sec:authorize="hasRole('Client')" href="/buy-pass">Kup Karnet</a>
+            <a sec:authorize="hasRole('Client')" href="/my-pass">Zobacz status karnetu</a>
+            <a sec:authorize="hasRole('Employee') or hasRole('Admin')" href="/admin/clients">Panel Admina</a>
+            <div sec:authorize="isAuthenticated()">
+                <form action="/logout" th:method="POST">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <input type="submit" class="font-thin text-white uppercase cursor-pointer" value="Wyloguj" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white mx-auto max-w-6xl shadow-sm p-4">
+            <div sec:authorize="isAuthenticated()">
+                <h2 class="text-2xl">Witaj, <span th:text="${#authentication.getPrincipal().getUsername()}"></span></h2>
+            </div>
+
+            <div class="flex w-full h-full flex-row space-x-2 justify-center content-center" sec:authorize="hasRole('ANONYMOUS')">
+            <div class="w-1/2">
+                <h2 class="text-2xl">Zaloguj się</h2>
+                Aby korzystać z naszej strony, musisz się zalogować!
+                <hr />
+                <form action="/login" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="w-full flex flex-col space-y-2 mt-4">
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Email: </div>
+                            <div class="w-3/4"><input type="text" name="email" required="true" class="w-full rounded-md border bg-red-100 p-2 text-red-600 border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Hasło: </div>
+                            <div class="w-3/4"><input type="password" name="password" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>
+                        
+                        <input type="submit" value="Zaloguj się" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600 hover:bg-red-500 hover:text-red-100 cursor-pointer"/>
+                    </div>
+                </form>
+            </div>
+            <div class="w-1/2">
+                <h2 class="text-2xl">Zarejestruj się</h2>
+                Nie masz jeszcze konta? Możesz je tutaj zarejestrować!
+                <hr />
+                <form action="/register" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="w-full flex flex-col space-y-2 mt-4">
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Email: </div>
+                            <div class="w-3/4"><input type="text" name="email" required="true" class="w-full rounded-md border bg-red-100 p-2 text-red-600 border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Hasło: </div>
+                            <div class="w-3/4"><input type="password" name="password" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Powtórz Hasło: </div>
+                            <div class="w-3/4"><input type="password" name="passwordRepeat" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Imie: </div>
+                            <div class="w-3/4"><input type="text" name="name" required="true" class="w-full rounded-md border bg-red-100 p-2 text-red-600 border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Nazwisko: </div>
+                            <div class="w-3/4"><input type="text" name="surname" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Telefon: </div>
+                            <div class="w-3/4"><input type="text" name="phone" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>      
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Adres: </div>
+                            <div class="w-3/4"><input type="text" name="address" required="true" class="w-full rounded-md border bg-red-100 p-2 text-red-600 border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Kod Pocztowy: </div>
+                            <div class="w-3/4"><input type="text" name="postcode" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>
+                        <div class="w-full flex flex-row">
+                            <div class="w-1/4 flex flex-wrap justify-center content-center">Miejscowość: </div>
+                            <div class="w-3/4"><input type="text" name="city" required="true" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600" /></div>
+                        </div>                                          
+                        <input type="submit" value="Zarejestruj się" class="w-full rounded-md bg-red-100 p-2 text-red-600 border border-red-600 hover:bg-red-500 hover:text-red-100 cursor-pointer"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

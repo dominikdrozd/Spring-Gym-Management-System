@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moja Siłownia!</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet">
+    <link th:href="@{/css/tailwind.css}" rel="stylesheet">
+    <script th:src="@{/js/tailwind.js}"></script>
+</head>
+<body>
+    <img th:src="@{/imgs/logo.png}" alt="" class="mx-auto min-w-1/6">
+
+    <div class="w-full h-12 bg-red-500">
+        <div class="max-w-6xl mx-auto h-12 flex flex-wrap flex-row justify-center content-center space-x-12 uppercase text-2xl font-thin text-white">
+            <a href="/">Strona Główna</a>
+            <a href="/about-us">O Nas</a>
+            <a href="/buy-pass">Kup Karnet</a>
+        </div>
+    </div>
+
+    <div class="bg-white mx-auto max-w-6xl shadow-sm p-4">
+        <h2 class="text-2xl">Zarejestruj się</h2>
+        Nie masz jeszcze konta? Możesz je tutaj zarejestrować!
+        <hr />
+        <h2 class="text-xl">Witaj, <span th:text="${client.getName}"></span> zostałeś pomyślnie zarejestrowany.</h2>
+
+        <a href="/login" class="text-red-500 underline cursor-pointer hover:text-red-600">Kliknij Tutaj</a> aby się zalogować!
+    </div>
+</body>
+</html>
